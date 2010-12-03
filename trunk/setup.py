@@ -56,7 +56,7 @@ setup(name='VamPyTrace',
           library_dirs=get_vt_dirs('mpi')['library_dirs'],
           libraries=get_vt_dirs('mpi')['libraries'],
           define_macros=[('VTRACE',None)]
-          )
+          ),
         Extension('vampytrace.instruments.mt._VT_User', ['src/vt_user.i'],
           swig_opts=['-DVTRACE', '-I'+get_python_inc(),'-I'+get_vt_dirs('mt')['include_dirs'][0]],
           include_dirs=[get_python_inc()]+get_vt_dirs('mt')['include_dirs'],

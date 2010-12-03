@@ -35,12 +35,12 @@ import sys
 import vampytrace
 
 
-class VamPyTrace():
+class VampyTrace():
 
     def __init__(self, instruments):
         self.instruments=instruments
 
-    def trace(frame, event, arg):
+    def trace(self, frame, event, arg):
        
         code = frame.f_code
         function_name = code.co_name
@@ -51,7 +51,7 @@ class VamPyTrace():
             return
         elif event=='call':
             self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
-            return trace_calls_and_returns	
+            return self.trace	
 
 
 def main():
@@ -59,8 +59,8 @@ def main():
     parser = vampytrace.VampyTraceClParser()
     vtc, argv = parser.parse(sys.argv)
    
-    instruments = __import__('vampytrace.instruments.'+vtc.mode)
-    tracer = VamPyTrace(instruments)
+    instruments = __import__('vampytrace.instruments.'+vtc.mode, fromlist=['vampytrace.instruments'])
+    tracer = VampyTrace(instruments)
 
     sys.settrace(tracer.trace)
 

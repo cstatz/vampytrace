@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 import vampytrace
+from vampytrace.vampytraceconfig import VampyTraceConfig
 
 def get_vt_version():
     from subprocess import PIPE, Popen 
@@ -126,5 +127,8 @@ examples:
         self.parser = parser
 
     def parse(self, args):
+        
         values = self.parser.parse_known_args(args)
-        return values[1]
+        vtc = VampyTraceConfig(values[0])
+        
+        return vtc, values[1]

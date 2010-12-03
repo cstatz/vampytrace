@@ -31,5 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
-class vampytraceconfig():
-    pass
+class VampyTraceConfig():
+    def __init__(self,values):
+        self.mode='seq'
