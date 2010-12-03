@@ -1,0 +1,17 @@
+VamPyTrace - A VampirTrace Wrapper in Python
+
+:Author:	Christoph Statz
+:Contact:	statz@wh2.tu-dresden.de
+:Web Site:	http://vampytrace.googlecode.com/
+:Organization:	TU Dresden <http://www.tu-dresden.de>
+:Address:	Technische Universität Dresden, 01062 Dresden
+
+
+
+HISTORY: VamPyTrace
+--------------------------------------------------------------------------------
+
+Release: 0.1.0
+--------------------------------------------------------------------------------
+
+* This is the initial release.  
