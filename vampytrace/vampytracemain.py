@@ -34,26 +34,44 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import sys
 import vampytrace
 
-def trace_calls_and_returns(frame, event, arg):
 
-    code = frame.f_code
-    function_name = code.co_name
-    function_file_name = code.co_filename
-    function_linenumber = frame.f_lineno
-    if event=='return':
-        vt.VT_User_end__(function_name)
-        return
-    elif event=='call':
-        vt.VT_User_start__(function_name,function_file_name,function_linenumber)
-        return trace_calls_and_returns	
+class VamPyTrace():
+
+    def __init__(self, instruments):
+        self.instruments=instruments
+
+    def trace(frame, event, arg):
+       
+        code = frame.f_code
+        function_name = code.co_name
+        function_file_name = code.co_filename
+        function_linenumber = frame.f_lineno
+        if event=='return':
+            self.instruments.VT_User_end(function_name)
+            return
+        elif event=='call':
+            self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
+            return trace_calls_and_returns	
 
 
 def main():
 
     parser = vampytrace.VampyTraceClParser()
-    vtconf = parser.parse(sys.argv)
+    vtc, argv = parser.parse(sys.argv)
+   
+    instruments = __import__('vampytrace.instruments.'+vtc.mode)
+    tracer = VamPyTrace(instruments)
 
-    vt.VT_User_trace_on__()
-    sys.settrace(trace_calls_and_returns)
+    sys.settrace(tracer.trace)
 
-    vt.VT_User_trace_off__()
+    instruments.VT_User_trace_on()
+    probe = __import__(argv[0])
+    instruments.VT_User_trace_off()
+
+    try:
+        instruments.VT_User_trace_on()
+        probe.main()
+        instruments.VT_User_trace_off()
+    except NameError:
+        pass
+
