@@ -30,7 +30,22 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
+import os
 
 class VampyTraceConfig():
     def __init__(self,values):
-        self.mode='seq'
+        
+        try:
+            os.environ['VT_FILE_PREFIX']
+        except KeyError:
+            name, ext = os.path.splitext(values[1][0])
+            os.environ['VT_FILE_PREFIX'] = name+'__'
+
+        self.mode = 'seq'
+
+        if values[0].mpi:
+            self.mode = 'mpi'
+
+            import mpi4py.rc
+            mpi4py.rc.profile('vt')
+
