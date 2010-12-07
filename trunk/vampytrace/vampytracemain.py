@@ -58,20 +58,22 @@ def main():
 
     parser = vampytrace.VampyTraceClParser()
     vtc, argv = parser.parse(sys.argv)
-   
+
+    import imp
+    
     instruments = __import__('vampytrace.instruments.'+vtc.mode, fromlist=['vampytrace.instruments'])
     tracer = VampyTrace(instruments)
 
     sys.settrace(tracer.trace)
 
     instruments.VT_User_trace_on()
-    probe = __import__(argv[0])
+    probe = imp.load_source('probe',argv[0])
     instruments.VT_User_trace_off()
 
     try:
         instruments.VT_User_trace_on()
         probe.main()
         instruments.VT_User_trace_off()
-    except NameError:
+    except AttributeError:
         pass
 

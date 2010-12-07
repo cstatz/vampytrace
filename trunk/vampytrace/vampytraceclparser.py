@@ -129,6 +129,6 @@ examples:
     def parse(self, args):
         
         values = self.parser.parse_known_args(args)
-        vtc = VampyTraceConfig(values[0])
+        config = VampyTraceConfig(values)
         
-        return vtc, values[1]
+        return config, values[1]
