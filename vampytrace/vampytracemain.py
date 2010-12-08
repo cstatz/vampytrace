@@ -46,10 +46,15 @@ class VampyTrace():
         function_name = code.co_name
         function_file_name = code.co_filename
         function_linenumber = frame.f_lineno
-        if event=='return':
+        if event=='c_return':
+            self.instruments.VT_User_end(function_name)
+        elif event=='return':
             self.instruments.VT_User_end(function_name)
             return
         elif event=='call':
+            self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
+            return self.trace	
+        elif event=='c_call':
             self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
             return self.trace	
 
