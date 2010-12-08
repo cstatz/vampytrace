@@ -43,6 +43,9 @@ class VampyTraceConfig():
 
         self.mode = 'seq'
 
+        if values[0].mt:
+            self.mode = 'mt'
+
         if values[0].mpi:
             self.mode = 'mpi'
 

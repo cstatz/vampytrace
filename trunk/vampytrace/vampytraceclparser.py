@@ -121,6 +121,12 @@ examples:
             help=('Enable tracing of MPI parallel code.'))  
 
         parser.add_argument(
+	    '-vt:mt',
+            dest='mt',
+            action='store_true',
+            help=('Enable tracing of multithreaded code.'))  
+
+        parser.add_argument(
             'file',
             help=('Python script to be parsed.'))
 
