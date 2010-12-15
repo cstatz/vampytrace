@@ -50,5 +50,12 @@ class VampyTraceConfig():
             self.mode = 'mpi'
 
             import mpi4py.rc
-            mpi4py.rc.profile('vt')
+            mpi4py.rc.profile('vt-mpi')
+        
+        if values[0].hyb:
+            self.mode = 'hyb'
+
+            import mpi4py.rc
+	    mpi4py.rc.thread_level = "funneled"
+            mpi4py.rc.profile('vt-hyb')
 

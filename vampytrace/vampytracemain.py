@@ -69,6 +69,10 @@ def main():
     instruments = __import__('vampytrace.instruments.'+vtc.mode, fromlist=['vampytrace.instruments'])
     tracer = VampyTrace(instruments)
 
+    if vtc.mode=='mt' or vtc.mode=='hyb':
+       import threading
+       threading.settrace(tracer.trace)
+
     sys.settrace(tracer.trace)
 
     instruments.VT_User_trace_on()
