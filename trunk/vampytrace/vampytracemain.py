@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
 import vampytrace
-
+from inspect import getmodule
 
 class VampyTrace():
 
@@ -41,21 +41,36 @@ class VampyTrace():
         self.instruments=instruments
 
     def trace(self, frame, event, arg):
-       
+        
         code = frame.f_code
+
         function_name = code.co_name
         function_file_name = code.co_filename
         function_linenumber = frame.f_lineno
+	
+	if function_file_name == '<string>':
+            return       
+    
+        try: 
+            module_name=getmodule(frame).__name__
+            if function_name=='<module>':
+                tag = module_name
+            else:
+                tag = module_name+'.'+function_name
+	except AttributeError:
+            return 
+
         if event=='c_return':
-            self.instruments.VT_User_end(function_name)
+            self.instruments.VT_User_end(tag)
+            return
         elif event=='return':
-            self.instruments.VT_User_end(function_name)
+            self.instruments.VT_User_end(tag)
             return
         elif event=='call':
-            self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
+            self.instruments.VT_User_start(tag,function_file_name,function_linenumber)
             return self.trace	
         elif event=='c_call':
-            self.instruments.VT_User_start(function_name,function_file_name,function_linenumber)
+            self.instruments.VT_User_start(tag,function_file_name,function_linenumber)
             return self.trace	
 
 
@@ -75,14 +90,8 @@ def main():
 
     sys.settrace(tracer.trace)
 
-    instruments.VT_User_trace_on()
-    probe = imp.load_source('probe',argv[0])
-    instruments.VT_User_trace_off()
-
     try:
-        instruments.VT_User_trace_on()
-        probe.main()
-        instruments.VT_User_trace_off()
+        imp.load_source(argv[0].split('.')[0],argv[0]).main()
     except AttributeError:
         pass
 
